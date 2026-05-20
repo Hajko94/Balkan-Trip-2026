@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Balkan Moto">
+<title>Balkan Moto 2025</title>
+<style>
+:root {
+  --green: #1D9E75;
+  --green-dark: #085041;
+  --green-light: #E1F5EE;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --purple: #3C3489;
+  --purple-light: #EEEDFE;
+  --blue: #0C447C;
+  --blue-light: #E6F1FB;
+  --coral: #712B13;
+  --coral-light: #FAECE7;
+  --bg: #ffffff;
+  --bg2: #f5f5f0;
+  --bg3: #eeede8;
+  --text: #1a1a1a;
+  --text2: #666660;
+  --text3: #999990;
+  --border: rgba(0,0,0,0.1);
+  --border2: rgba(0,0,0,0.2);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --green: #5DCAA5;
+    --green-dark: #9FE1CB;
+    --green-light: #04342C;
+    --amber: #EF9F27;
+    --amber-light: #412402;
+    --purple: #AFA9EC;
+    --purple-light: #26215C;
+    --blue: #85B7EB;
+    --blue-light: #042C53;
+    --coral: #F0997B;
+    --coral-light: #4A1B0C;
+    --bg: #1c1c1e;
+    --bg2: #2c2c2e;
+    --bg3: #3a3a3c;
+    --text: #f0f0ee;
+    --text2: #aeaead;
+    --text3: #6e6e6a;
+    --border: rgba(255,255,255,0.12);
+    --border2: rgba(255,255,255,0.22);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; color: var(--text); }
+.app { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
+.screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+.screen.on { display: flex; }
+.scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }
+
+/* Status bar safe area */
+.statusbar { height: env(safe-area-inset-top, 20px); background: var(--bg2); }
+
+/* Nav bar */
+.navbar {
+  display: flex;
+  background: var(--bg2);
+  border-top: 0.5px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.navbtn {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 3px; padding: 8px 0 10px; cursor: pointer;
+  color: var(--text3); font-size: 10px; font-weight: 500;
+  border: none; background: none; -webkit-appearance: none;
+}
+.navbtn.on { color: var(--green); }
+.navbtn svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Header */
+.appheader { padding: 16px 16px 12px; border-bottom: 0.5px solid var(--border); background: var(--bg); }
+.appheader h1 { font-size: 20px; font-weight: 600; color: var(--text); }
+.appheader p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+/* Stat pills */
+.pills { display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto; scrollbar-width: none; }
+.pills::-webkit-scrollbar { display: none; }
+.pill { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 20px; padding: 6px 12px; white-space: nowrap; font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 5px; }
+.pill svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pill strong { color: var(--text); font-weight: 500; }
+
+/* Section label */
+.slabel { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; padding: 12px 16px 6px; }
+
+/* Day card */
+.daycard { margin: 0 16px 10px; background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; active-scale: 0.98; }
+.daycard:active { opacity: 0.7; }
+.dchead { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+.badge { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; color: var(--green-dark); background: var(--green-light); }
+.badge.rest { background: var(--amber-light); color: var(--amber); }
+.badge.transfer { background: var(--purple-light); color: var(--purple); }
+.dinfo { flex: 1; min-width: 0; }
+.dinfo .ddate { font-size: 11px; color: var(--text3); }
+.dinfo .dtitle { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dinfo .dsub { font-size: 12px; color: var(--text2); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chev { color: var(--text3); width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.tags { display: flex; gap: 5px; padding: 0 14px 12px; flex-wrap: wrap; }
+.tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+.tag-me { background: var(--green-light); color: var(--green-dark); }
+.tag-ba { background: var(--purple-light); color: var(--purple); }
+.tag-hr { background: var(--blue-light); color: var(--blue); }
+.tag-xk { background: var(--amber-light); color: var(--amber); }
+.tag-al { background: var(--coral-light); color: var(--coral); }
+
+/* Detail */
+.detailheader { background: var(--bg2); padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 0.5px solid var(--border); }
+.backbtn { background: none; border: none; cursor: pointer; color: var(--green); font-size: 16px; padding: 0; display: flex; align-items: center; gap: 4px; font-weight: 500; -webkit-appearance: none; }
+.backbtn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.dtitle2 { font-size: 15px; font-weight: 500; color: var(--text); }
+.dsubt { font-size: 12px; color: var(--text2); }
+
+.hero { padding: 20px 16px; color: white; }
+.hero.green { background: linear-gradient(135deg, #085041, #1D9E75); }
+.hero.amber { background: linear-gradient(135deg, #633806, #BA7517); }
+.hero.purple { background: linear-gradient(135deg, #3C3489, #7F77DD); }
+.hero .hnum { font-size: 12px; opacity: .8; }
+.hero .hname { font-size: 21px; font-weight: 600; margin: 4px 0; }
+.hero .hroute { font-size: 13px; opacity: .85; }
+
+.statstrow { display: flex; border-bottom: 0.5px solid var(--border); }
+.statbox { flex: 1; padding: 12px; text-align: center; border-right: 0.5px solid var(--border); }
+.statbox:last-child { border-right: none; }
+.statbox .sv { font-size: 17px; font-weight: 600; color: var(--text); }
+.statbox .sl2 { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+.dsection { padding: 14px 16px; border-bottom: 0.5px solid var(--border); }
+.dsection h3 { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.dsection h3 svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hlitem { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+.hldot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-top: 5px; flex-shrink: 0; }
+.hltext { font-size: 13px; color: var(--text); line-height: 1.55; }
+
+/* Shot cards */
+.shotcard { background: var(--bg2); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px; border: 0.5px solid var(--border); }
+.sctop { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.scicon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.sctitle { font-size: 13px; font-weight: 500; color: var(--text); }
+.scsub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.gearpills { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+.gp { font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 500; border: 0.5px solid var(--border2); background: var(--bg); color: var(--text2); }
+.gp.drone { background: var(--blue-light); color: var(--blue); border-color: #B5D4F4; }
+.gp.action { background: var(--green-light); color: var(--green-dark); border-color: #9FE1CB; }
+.gp.iphone { background: var(--purple-light); color: var(--purple); border-color: #CECBF6; }
+.scdesc { font-size: 12px; color: var(--text); line-height: 1.55; margin-top: 9px; }
+
+/* Checklist */
+.progwrap { padding: 12px 16px; background: var(--bg2); border-bottom: 0.5px solid var(--border); }
+.proglabels { font-size: 12px; color: var(--text2); display: flex; justify-content: space-between; margin-bottom: 8px; }
+.progbg { height: 5px; background: var(--border); border-radius: 10px; }
+.progfill { height: 5px; background: var(--green); border-radius: 10px; transition: width .3s; }
+.clgroup { padding: 0 16px; }
+.clitem { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--border); cursor: pointer; }
+.clitem:last-child { border-bottom: none; }
+.checkbox { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s; }
+.checkbox.checked { background: var(--green); border-color: var(--green); }
+.checkbox svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.checkbox.checked svg { opacity: 1; }
+.cllabel { font-size: 14px; color: var(--text); }
+.cllabel.done { text-decoration: line-through; color: var(--text3); }
+
+/* Shot spots screen */
+.shotday { margin: 0 16px 10px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HOME -->
+<div class="screen on" id="s-home">
+  <div class="statusbar"></div>
+  <div class="scroll">
+    <div class="appheader">
+      <h1>🏍️ Balkan Moto 2025</h1>
+      <p>Hajk &amp; broer · 2 adventure motoren · 5 landen</p>
+    </div>
+    <div class="pills">
+      <div class="pill"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><strong>23 mei</strong> vertrek</div>
+      <div class="pill"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6l9-3 9 3M3 18l9 3 9-3"/></svg><strong>~3.200</strong> km</div>
+      <div class="pill"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><strong>5</strong> landen</div>
+      <div class="pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><strong>12</strong> rijdagen</div>
+    </div>
+    <div class="slabel">Reisplan — tik op een dag</div>
+    <div id="home-cards"></div>
+  </div>
+  <div class="navbar" id="nb-home">
+    <button class="navbtn on" onclick="tab('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Route</button>
+    <button class="navbtn" onclick="tab('shots')"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Shot-spots</button>
+    <button class="navbtn" onclick="tab('check')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Checklist</button>
+  </div>
+</div>
+
+<!-- SHOTS -->
+<div class="screen" id="s-shots">
+  <div class="statusbar"></div>
+  <div class="appheader">
+    <h1>📸 Shot-spots per dag</h1>
+    <p>DJI Air 3S · Osmo Action 6 · iPhone 17 Pro</p>
+  </div>
+  <div class="scroll" id="shots-body"></div>
+  <div class="navbar">
+    <button class="navbtn" onclick="tab('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Route</button>
+    <button class="navbtn on" onclick="tab('shots')"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Shot-spots</button>
+    <button class="navbtn" onclick="tab('check')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Checklist</button>
+  </div>
+</div>
+
+<!-- CHECKLIST -->
+<div class="screen" id="s-check">
+  <div class="statusbar"></div>
+  <div class="appheader">
+    <h1>✅ Vertrekchecklist</h1>
+    <p>Alles klaar voor 23 mei?</p>
+  </div>
+  <div class="progwrap">
+    <div class="proglabels"><span id="cc">0 / 28 klaar</span><span id="cp">0%</span></div>
+    <div class="progbg"><div class="progfill" id="pf" style="width:0%"></div></div>
+  </div>
+  <div class="scroll" id="cl-body"></div>
+  <div class="navbar">
+    <button class="navbtn" onclick="tab('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Route</button>
+    <button class="navbtn" onclick="tab('shots')"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Shot-spots</button>
+    <button class="navbtn on" onclick="tab('check')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Checklist</button>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="screen" id="s-detail">
+  <div class="statusbar"></div>
+  <div class="detailheader">
+    <button class="backbtn" onclick="back()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Terug</button>
+    <div style="flex:1;min-width:0;padding-left:8px">
+      <div class="dtitle2" id="d-title"></div>
+      <div class="dsubt" id="d-date"></div>
+    </div>
+  </div>
+  <div class="scroll" id="d-body"></div>
+</div>
+
+</div>
+
+<script>
+const DAYS = [
+  {b:"BUS",tp:"t",date:"Vrijdag 23 mei",title:"Maastricht → Bar",sub:"Nachtbus vertrek ~18:00",km:"—",dur:"~16 uur",c:[],
+   hl:["Motoren laden in de vrachtbus in Maastricht","Comfortabele nachtrit — slaap zoveel mogelijk","Aankomst Bar zaterdagochtend vroeg","Paspoort, groene kaart en rijbewijs in handbagage"],shots:[]},
+  {b:"ZA",tp:"r",date:"Zaterdag 24 mei",title:"Aankomst Bar · Rustdag",sub:"Montenegro",km:"30",dur:"1u",c:["🇲🇪 Montenegro"],
+   hl:["Motoren uitladen en technisch controleren na transport","Airbnb inchecken, uitrusten","Korte proefrit langs de kust om de motoren te checken","Vroeg slapen voor de eerste rijdag morgen"],
+   shots:[{title:"Kustlijn Bar · aankomstshot",sub:"iPhone · documentatie",gear:["iPhone"],ic:"#E1F5EE",tc:"#085041",emoji:"📷",desc:"Groepsfoto met beide motoren langs de Adriatische zee — officieel startpunt van de trip. iPhone 17 Pro 2x tele voor portret met zee op achtergrond. Dit wordt de openingsshot van je trip-video."}]},
+  {b:"D1",tp:"g",date:"Zondag 25 mei",title:"Bar → Kotor → Njeguši → Cetinje",sub:"~250 km · ~6 uur rijden",km:"250",dur:"~6u",c:["🇲🇪 Montenegro"],
+   hl:["Rijden langs de Boka Kotorska — spectaculaire baai, weg kronkelt langs het water","Kotor serpentine: 25 schakelbochten omhoog — je rijdt erdoorheen, niet stoppen","Njeguši pas op ~1.000m — uitzicht over baai en bergen vanuit het zadel","Lovćen NP kamweg: ruige natuur, weinig verkeer, bergtoppen op 1.600m","Cetinje als slaapplaats"],
+   shots:[
+     {title:"Kotor serpentine · drone top-down",sub:"Ochtend · beste shot dag 1",gear:["Drone","iPhone"],ic:"#E6F1FB",tc:"#0C447C",emoji:"🚁",desc:"Halverwege de klim is een brede vluchtstrook. Drone stijgt recht omhoog op 120m: alle 25 bochten + de baai in één kader. Rij de bocht 2-3x terwijl drone filmt. iPhone 17 Pro ultrawide op statief voor de versie met jou in beeld."},
+     {title:"Njeguši kamweg · rijdend follow",sub:"Middag · beide motoren",gear:["Osmo Action 6","Drone"],ic:"#E1F5EE",tc:"#085041",emoji:"🎬",desc:"Osmo Action 6 op helmkin: lage POV, weg omhoog naar de horizon. Drone in ActiveTrack volgt van 10m achter op 5m hoogte — 4K/60fps voor slow-motion edit. Rij op 50-60 km/u zodat drone bijhoudt."}]},
+  {b:"D2",tp:"g",date:"Maandag 26 mei",title:"Cetinje → Sinjajevina → Žabljak",sub:"~280 km · ~6 uur rijden",km:"280",dur:"~6u",c:["🇲🇪 Montenegro"],
+   hl:["Centrale Montenegro route door wilde natuur richting noorden","Sinjajevina hoogvlakte op ~1.800m — grootste hoogvlakte van Europa, eindeloos open landschap","Tara canyon: rit langs de rand van de diepste canyon van Europa, 1.300m diep","Đurđevića Tara brug: historische boogbrug 150m boven het water — je rijdt erover","Durmitor NP: zwarte dennenbossen op 1.450m · Žabljak als slaapplaats"],
+   shots:[
+     {title:"Đurđevića brug · drone under-bridge",sub:"Beste drone shot van de trip",gear:["Drone","Osmo Action 6"],ic:"#E6F1FB",tc:"#0C447C",emoji:"🚁",desc:"Drone hangt 60m ónder de brugboog terwijl jij eroverheen rijdt. Camera kijkt schuin omhoog: motor op de brug, groene Tara canyon dieper wordend. Rij op 30 km/u. Tweede pass: drone volgt van zijkant in ActiveTrack. Osmo Action helmkin voor de POV tegelijk."},
+     {title:"Sinjajevina hoogvlakte · miniature",sub:"Ochtend · verlaten weg",gear:["iPhone","Drone"],ic:"#FAEEDA",tc:"#633806",emoji:"🏔️",desc:"iPhone 17 Pro 5x tele: motor klein in het grote groene landschap — gecomprimeerde diepte. Drone op 120m: beide motoren als puntje in het groen met bergketen op de horizon."}]},
+  {b:"D3",tp:"g",date:"Dinsdag 27 mei",title:"Žabljak → Piva canyon → Foča",sub:"~240 km · ~5 uur rijden",km:"240",dur:"~5u",c:["🇲🇪 Montenegro","🇧🇦 Bosnië"],
+   hl:["Piva canyon: weg uitgehouwen ín de rotswand boven het aquamarijn stuwmeer — uniek in Europa","Grensovergang Montenegro → Bosnië bij Šćepan Polje — snel, weinig wachttijd","Rit langs de Tara rivier in het dal","Bochtige bergwegen door Oost-Bosnische natuur","Foča als slaapplaats langs de Drina rivier"],
+   shots:[
+     {title:"Piva canyon · rotswand-weg drone",sub:"Meest uniek shot van de route",gear:["Drone","Osmo Action 6"],ic:"#E6F1FB",tc:"#0C447C",emoji:"🚁",desc:"De weg is letterlijk in de rotswand uitgehouwen met open zijkant naar het turquoise meer. Drone hangt boven het midden van het meer op 80m: weg, rotswand en aquamarijn water in één kader. Osmo Action helmkin vangt de beleving vanuit het zadel."},
+     {title:"Piva meer · spiegelreflectie",sub:"Vroeg ochtend bij windstilte",gear:["iPhone","Drone"],ic:"#EEEDFE",tc:"#3C3489",emoji:"📷",desc:"Bij windstilte spiegelt het aquamarijn meer perfect. iPhone 17 Pro ultrawide op statief: motor op voorgrond, perfecte spiegeling van de bergwanden. Drone panorama vangt de volle canyon-lengte van 120m hoogte."}]},
+  {b:"D4",tp:"g",date:"Woensdag 28 mei",title:"Foča → Neretva vallei → Mostar",sub:"~300 km · ~6 uur rijden",km:"300",dur:"~6u",c:["🇧🇦 Bosnië"],
+   hl:["Bergwegen vanuit Foča zuidwaarts door Herzegovina","Neretva rivier vallei: smaragdgroen water, weg kronkelt langs de oever","Jablanica meer: stuwmeer omgeven door kale bergwanden","Herzegovina: droog, warm, rotsig landschap wisselt met groene dalen","Mostar als slaapplaats"],
+   shots:[
+     {title:"Neretva vallei · weg-langs-rivier",sub:"Middag · sterkste contrast-shot",gear:["Drone","iPhone"],ic:"#E1F5EE",tc:"#085041",emoji:"🚁",desc:"Drone op 50m: weg links, rivier rechts, motor rijdt ertussenin — maximaal kleurcontrast grijs asfalt vs. smaragdgroen. iPhone 17 Pro 5x tele vangt rijder met groen water als achtergrond."},
+     {title:"Neretva · chest-mount bochtenfilm",sub:"Laat middag · Osmo Action",gear:["Osmo Action 6"],ic:"#FAEEDA",tc:"#633806",emoji:"🎬",desc:"Osmo Action 6 chest-mount: stuur, handen en bochtige weg met groene vallei dieper wordend. 4K/60fps, achteraf slow-mo op de beste bochten. HorizonSteady aan voor vloeiend beeld."}]},
+  {b:"RUST",tp:"r",date:"Donderdag 29 mei",title:"Rustdag · Mostar omgeving",sub:"Bosnië — rijden mag, hoeft niet",km:"0-100",dur:"Vrij",c:["🇧🇦 Bosnië"],
+   hl:["Uitslapen, geen vroeg alarm","Optionele korte rit Blagaj (12km) — weg langs rivier, puur rijden","Kleding wassen, geheugenkaarten naar SSD, accu's laden","Gear check: banden, olie, ketting","Osmo Action en drone beelden doorkijken op laptop"],shots:[]},
+  {b:"D5",tp:"g",date:"Vrijdag 30 mei",title:"Mostar → Dalmatische kust → Trebinje",sub:"~280 km · ~6 uur rijden",km:"280",dur:"~6u",c:["🇭🇷 Kroatië","🇧🇦 Bosnië"],
+   hl:["Bergwegen vanuit Herzegovina richting kust","Kroatische kustweg: spectaculaire kliffen, turquoise Adriatische zee","Neum passeren — Bosnisch stukje zeekust, bijzonder geografisch feit","Terugrit naar Trebinje over Herzegovijnse bergpassen","Trebinje als slaapplaats — rustig, goede wijn"],
+   shots:[
+     {title:"Kroatische kustweg · klif-drone",sub:"Middag · beste kustmoment",gear:["Drone","iPhone"],ic:"#E6F1FB",tc:"#0C447C",emoji:"🚁",desc:"Drone op 80m schuin vooruit: motor in de bocht, zee en eilanden op de achtergrond. iPhone 17 Pro 5x tele vangt rijder dichtbij met de zee gecomprimeerd als backdrop."},
+     {title:"Kust · zonsondergang silhouet",sub:"Plan timing voor gouden uur ~19:30",gear:["iPhone","Drone"],ic:"#FAEEDA",tc:"#633806",emoji:"🌅",desc:"Motor silhouet voor ondergaande zon boven de Adriatische zee. iPhone 17 Pro belicht op de lucht — maximaal silhouet-effect. Drone boom-shot omhoog tijdens het gouden uur."}]},
+  {b:"D6",tp:"g",date:"Zaterdag 31 mei",title:"Trebinje → Komovi → Peja",sub:"~310 km · ~6,5 uur rijden",km:"310",dur:"~6,5u",c:["🇲🇪 Montenegro","🇽🇰 Kosovo"],
+   hl:["Oost-Montenegro: minst bezochte hoek, ruige wilde natuur","Komovi gebergte: drie toppen boven 2.400m, weg kronkelt langs de voet","Andrijevica: klein bergdorp — tank hier vol voor Kosovo","Grensovergang Montenegro → Kosovo — normaal snel (<15 min)","Peja: stad in de voet van de Accursed Mountains"],
+   shots:[
+     {title:"Komovi · laag statief on-road",sub:"Ochtend · weinig verkeer",gear:["iPhone","Drone"],ic:"#EEEDFE",tc:"#3C3489",emoji:"🏔️",desc:"iPhone 17 Pro ultrawide op statief op het asfalt: motor rijdt op je af, Komovi toppen (2.400m) vullen de achtergrond volledig. Drone overhead vangt de weg door het massief."},
+     {title:"Komovi · drone ActiveTrack follow",sub:"Beste actieshot dag 6",gear:["Drone","Osmo Action 6"],ic:"#E6F1FB",tc:"#0C447C",emoji:"🚁",desc:"Drone volgt beide motoren in ActiveTrack op 10m achter en 5m hoog. Rijden op 60-70 km/u. Bergwand als decor. Osmo Action helmkin tegelijk voor dubbele coverage. 4K/60fps."}]},
+  {b:"D7",tp:"g",date:"Zondag 1 juni",title:"Peja → Rugova Canyon → Prizren",sub:"~260 km · ~6 uur rijden",km:"260",dur:"~6u",c:["🇽🇰 Kosovo"],
+   hl:["Rugova Canyon: 25km lang, 1.000m diep — weg rijdt door de bodem van de kloof","Kristalhelder water van de Peja Bistrica rivier in de canyon","Na de canyon: bergweg over Qafa e Prushit pas richting het zuiden","Binnenwegen door Kosovo — weinig verkeer, goed asfalt","Prizren als slaapplaats"],
+   shots:[
+     {title:"Rugova Canyon · diepte shot",sub:"Beste canyon-shot van de trip",gear:["Drone","Osmo Action 6","iPhone"],ic:"#E6F1FB",tc:"#0C447C",emoji:"🚁",desc:"Drone vliegt horizontaal naast de weg op 40m — kliffen van 1.000m steken omhoog aan beide kanten. Osmo Action helmkin voor beleving vanuit de diepte. iPhone 17 Pro ultrawide vangt de canyon­wanden in volle hoogte."},
+     {title:"Qafa e Prushit · bergmeer",sub:"Middag · statief moment",gear:["iPhone","Drone"],ic:"#FAEEDA",tc:"#633806",emoji:"📷",desc:"iPhone 17 Pro ultrawide op statief: motor voorgrond, meertje midden, bergtop achtergrond — klassieke drie-lagen compositie. Drone panorama vangt de hoefijzervorm van de pas."}]},
+  {b:"D8",tp:"g",date:"Maandag 2 juni",title:"Prizren → SH21 → Theth",sub:"~220 km · ~5,5 uur rijden",km:"220",dur:"~5,5u",c:["🇦🇱 Albanië"],
+   hl:["Grensovergang Kosovo → Albanië bij Vrbnica — normaal snel","Albanese vlakte richting noorden — goede weg, rustig rijden","SH21: begint subtiel maar wordt snel spectaculair — smal, bochtig, alpien","Dal van Theth: omringd door toppen tot 2.600m, kristalheldere bergbeekjes","Kortere rijdag — maar de SH21 heeft genoeg wow-momenten"],
+   shots:[
+     {title:"SH21 · drie-camera setup",sub:"Hele dag de beste weg van Albanië",gear:["Drone","Osmo Action 6","iPhone"],ic:"#FAECE7",tc:"#712B13",emoji:"🚁",desc:"SH21 is DE motorweg van de Balkan — alle gear inzetten. (1) Drone top-down 120m: bochten als lint door de bergen. (2) Osmo Action helmkin 4K/60fps. (3) iPhone 17 Pro 5x tele: rijder met 2.600m toppen als backdrop. Rij de mooiste bocht 3x."},
+     {title:"Theth dal · aankomst gouden uur",sub:"Plan aankomst 18:00-19:00",gear:["iPhone","Drone"],ic:"#E1F5EE",tc:"#085041",emoji:"🌅",desc:"Theth dal omgeven door toppen die het gouden uur prachtig vangen. iPhone 17 Pro ultrawide voor het volle dal. Drone vogelperspectief: het volledige circulaire dal zichtbaar van 120m."}]},
+  {b:"D9",tp:"g",date:"Dinsdag 3 juni",title:"Theth → SH21 → Llogara → Sarande",sub:"~290 km · ~6 uur rijden",km:"290",dur:"~6u",c:["🇦🇱 Albanië"],
+   hl:["SH21 terug richting Shkodra — enige verharde uitweg, maar geen straf","Shkodra: tanken, korte stop","SH4 kustweg richting zuiden — rustig, minder toeristisch dan Kroatië","Llogara NP: bergpas op 1.027m — plotseling panorama over de Ionische kust","Sarande langs de Ionische zee als slaapplaats"],
+   shots:[
+     {title:"Llogara pas · beste drone Albanië",sub:"Plan aankomst pas om 16:00-17:00",gear:["Drone","iPhone"],ic:"#E6F1FB",tc:"#0C447C",emoji:"🚁",desc:"1.027m hoogte, plotseling uitzicht op de Ionische kust en Korfoe. Drone op 120m: kust, zee, eilanden en de weg die omlaag slingert. iPhone 17 Pro 5x tele comprimeert de kust spectaculair."},
+     {title:"SH4 kustweg · zee naast het wiel",sub:"Middag · rijdend shot",gear:["Osmo Action 6","Drone"],ic:"#FAECE7",tc:"#712B13",emoji:"🎬",desc:"Osmo Action chest-mount: turquoise zee aan de zijkant. Drone schuin van voren op 20m: gezicht, weg en zee in één frame. Minder druk dan Kroatische kust — drone kan rustig vliegen."}]},
+  {b:"RUST",tp:"r",date:"Woensdag 4 juni",title:"Rustdag · Sarande",sub:"Albanië — zee, rust, backup",km:"0",dur:"Vrij",c:["🇦🇱 Albanië"],
+   hl:["Zwemmen in de Ionische zee — helder blauw, warm water in juni","Alle geheugenkaarten kopiëren naar SSD — vandaag verplicht","Drone accu's volledig laden (3-4 uur per accu)","Osmo Action beelden doorkijken, beste shots selecteren","Gear check voor de laatste 3 rijdagen"],shots:[]},
+  {b:"D10",tp:"g",date:"Donderdag 5 juni",title:"Sarande → bergpassen → Berat",sub:"~310 km · ~6,5 uur rijden",km:"310",dur:"~6,5u",c:["🇦🇱 Albanië"],
+   hl:["Bergweg vanuit Sarande omhoog via Qafa e Muzinës — direct al spectaculair","Gjirokaster regio: ruige bergwegen door het Albanese binnenland, weinig verkeer","Qafa e Muzinës en Qafa e Grapës bergpassen — weinig bezocht maar fantastisch","Berat vallei: rit naar de 'stad van duizend ramen' door een groen dal","Berat als slaapplaats"],
+   shots:[
+     {title:"Muzina pas · verlaten ochtendweg",sub:"Vertrek vroeg voor beste licht",gear:["Drone","Osmo Action 6"],ic:"#E6F1FB",tc:"#0C447C",emoji:"🚁",desc:"Verlaat Sarande vroeg: bergweg is 's ochtends verlaten. Drone top-down 120m: weg slingert de bergwand in. Osmo Action helmkin. Beste licht vóór 10:00."},
+     {title:"Berat vallei · aankomst gouden uur",sub:"Plan aankomst ~19:00",gear:["iPhone","Drone"],ic:"#FAEEDA",tc:"#633806",emoji:"🌅",desc:"Rit de Berat vallei in bij avondlicht. iPhone 17 Pro ultrawide: brede vallei met motor voorgrond. Drone panorama met laatste zonlicht op de bergflanken — warme oranje tint."}]},
+  {b:"D11",tp:"g",date:"Vrijdag 6 juni",title:"Berat → Shkodra → Skadar → Bar",sub:"~330 km · ~6,5 uur rijden",km:"330",dur:"~6,5u",c:["🇦🇱 Albanië","🇲🇪 Montenegro"],
+   hl:["Laatste grote rijdag — bewust genieten van elk kilometer","Noord-Albanië via binnenlandse bergwegen richting Shkodra","Tanken in Shkodra — laatste Albanese stop","Skadar meer: grens Albanië-Montenegro, grootste meer van de Balkan","Montenegro kust terug naar Bar — nostalgisch gevoel"],
+   shots:[
+     {title:"Skadar meer · weids water panorama",sub:"Middag · statief en drone",gear:["Drone","iPhone"],ic:"#E1F5EE",tc:"#085041",emoji:"🚁",desc:"Drone panorama 120m: glanzend water, groene oevers, bergketen op achtergrond. iPhone 17 Pro 5x tele: motor op de oeverweg met het meer als reflecterend vlak."},
+     {title:"Bar kust · trip-afsluiter sunset",sub:"Avond — bewust tijd voor inplannen",gear:["iPhone","Drone"],ic:"#FAEEDA",tc:"#633806",emoji:"🌅",desc:"Laatste avond — maak dit goed. Motor langs de Adriatische zee, zonsondergang. Drone boom-shot van 5m naar 60m. iPhone 17 Pro portretmodus. Dit wordt de thumbnail van je trip-video."}]},
+  {b:"D12",tp:"t",date:"Zaterdag 7 juni",title:"Bar · Inladen · Nachtbus",sub:"Vertrek naar Maastricht",km:"—",dur:"~16 uur",c:["🇲🇪 Montenegro"],
+   hl:["Motoren inladen in de vrachtbus — neem 2-3u de tijd","Vertrek nachtbus Bar → Maastricht","Aankomst Maastricht zondagochtend vroeg","Trip-video beginnen te editen in de bus 🎬"],
+   shots:[{title:"Inlaad-outro · trip-afsluiter",sub:"Voor vertrek · iPhone ciné-modus",gear:["iPhone"],ic:"#EEEDFE",tc:"#3C3489",emoji:"🎬",desc:"Korte video van het inladen als outro voor je trip-film. iPhone 17 Pro in ciné-modus. Rijden tot aan de bus, laatste blik achterom richting de Adriatische zee."}]}
+];
+
+const CL = [
+  {g:"Motor & techniek",items:["Bandspanning voor- en achter OK","Oliepeil bijgevuld","Ketting gesmeerd en spanning OK","Remvloeistof en koelvloeistof OK","Alle lichten werken","Tubeless repair kit of wisselband set"]},
+  {g:"Documenten",items:["Paspoort geldig (ook voor Kosovo)","Rijbewijs A — internationaal geldig","Groene kaart motor — alle 5 landen","Kentekenbewijs motor","Reisverzekering met motorrijden","EHIC zorgpas"]},
+  {g:"Rijkleding & veiligheid",items:["Helm met schoon vizier","Adventure jas met protectoren","Motorhandschoenen (zomer + regen)","Motorlaarzen","Regenpak voor beide rijders","Tussenlaag voor boven 1.500m"]},
+  {g:"Camera gear",items:["DJI Air 3S + minimaal 3 accu's","DJI Osmo Action 6 + 2 accu's","Osmo helmkin-mount bevestigd en getest","Compact reisstatief","Geheugenkaarten leeg (128GB+)","Externe SSD voor dagelijkse backup","iPhone 17 Pro volledig geladen"]},
+  {g:"Praktisch",items:["Cash EUR + lokale valuta (BAM, ALL)","Maps.me offline kaarten geladen","Tanktas met noodset","Compacte EHBO-kit","Oordopjes + nekkussen voor de bus"]}
+];
+
+let cs = {}, allCI = [];
+
+function renderHomeCards() {
+  const wrap = document.getElementById('home-cards');
+  wrap.innerHTML = '';
+  DAYS.forEach((d, i) => {
+    const card = document.createElement('div');
+    card.className = 'daycard';
+    card.onclick = () => od(i);
+    const bCls = d.tp === 'r' ? 'badge rest' : d.tp === 't' ? 'badge transfer' : 'badge';
+    let tagsHtml = '';
+    if (d.c.length) {
+      tagsHtml = '<div class="tags">';
+      d.c.forEach(ct => {
+        const cls = ct.includes('Montenegro') ? 'tag-me' : ct.includes('Bosnië') ? 'tag-ba' : ct.includes('Kroatië') ? 'tag-hr' : ct.includes('Kosovo') ? 'tag-xk' : 'tag-al';
+        tagsHtml += `<span class="tag ${cls}">${ct}</span>`;
+      });
+      tagsHtml += '</div>';
+    }
+    card.innerHTML = `<div class="dchead"><div class="${bCls}">${d.b}</div><div class="dinfo"><div class="ddate">${d.date}${d.tp==='g' ? ' · '+d.km+' km · '+d.dur : ''}</div><div class="dtitle">${d.title}</div><div class="dsub">${d.sub}</div></div><svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>${tagsHtml}`;
+    wrap.appendChild(card);
+  });
+}
+
+function buildShots() {
+  const body = document.getElementById('shots-body');
+  body.innerHTML = '';
+  DAYS.forEach((d, i) => {
+    if (!d.shots || !d.shots.length) return;
+    const lbl = document.createElement('div');
+    lbl.className = 'slabel';
+    lbl.style.cursor = 'pointer';
+    lbl.innerHTML = `<span style="color:var(--green)">${d.b}</span> ${d.date}`;
+    lbl.onclick = () => od(i);
+    body.appendChild(lbl);
+    const wrap = document.createElement('div');
+    wrap.style.padding = '0 16px';
+    d.shots.forEach(s => {
+      wrap.innerHTML += shotHtml(s);
+    });
+    body.appendChild(wrap);
+  });
+}
+
+function shotHtml(s) {
+  const gpills = s.gear.map(g => {
+    const cls = g === 'Drone' ? 'drone' : g === 'Osmo Action 6' ? 'action' : 'iphone';
+    const label = g === 'Drone' ? '🚁 DJI Air 3S' : g === 'Osmo Action 6' ? '📷 Osmo Action 6' : '📱 iPhone 17 Pro';
+    return `<span class="gp ${cls}">${label}</span>`;
+  }).join('');
+  return `<div class="shotcard"><div class="sctop"><div class="scicon" style="background:${s.ic};color:${s.tc}">${s.emoji}</div><div><div class="sctitle">${s.title}</div><div class="scsub">${s.sub}</div></div></div><div class="gearpills">${gpills}</div><div class="scdesc">${s.desc}</div></div>`;
+}
+
+function buildChecklist() {
+  const body = document.getElementById('cl-body');
+  body.innerHTML = '';
+  allCI = [];
+  let idx = 0;
+  CL.forEach(g => {
+    const lbl = document.createElement('div');
+    lbl.className = 'slabel';
+    lbl.textContent = g.g;
+    body.appendChild(lbl);
+    const grp = document.createElement('div');
+    grp.className = 'clgroup';
+    g.items.forEach(item => {
+      allCI.push(item);
+      if (cs[item] === undefined) cs[item] = false;
+      const row = document.createElement('div');
+      row.className = 'clitem';
+      const i2 = idx;
+      row.innerHTML = `<div class="checkbox ${cs[item]?'checked':''}" id="bx${i2}"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="cllabel ${cs[item]?'done':''}" id="lb${i2}">${item}</span>`;
+      row.onclick = () => toggleCheck(i2, item);
+      grp.appendChild(row);
+      idx++;
+    });
+    body.appendChild(grp);
+  });
+  upProg();
+}
+
+function toggleCheck(i, item) {
+  cs[item] = !cs[item];
+  document.getElementById('bx'+i).className = 'checkbox' + (cs[item]?' checked':'');
+  document.getElementById('lb'+i).className = 'cllabel' + (cs[item]?' done':'');
+  upProg();
+}
+
+function upProg() {
+  const tot = allCI.length;
+  const done = allCI.filter(i => cs[i]).length;
+  const pct = Math.round(done / tot * 100);
+  document.getElementById('cc').textContent = done + ' / ' + tot + ' klaar';
+  document.getElementById('cp').textContent = pct + '%';
+  document.getElementById('pf').style.width = pct + '%';
+}
+
+function od(i) {
+  const d = DAYS[i];
+  document.getElementById('d-title').textContent = d.title;
+  document.getElementById('d-date').textContent = d.date;
+  const hc = d.tp === 'r' ? 'amber' : d.tp === 't' ? 'purple' : 'green';
+  let html = `<div class="hero ${hc}"><div class="hnum">${d.b} · ${d.date}</div><div class="hname">${d.title}</div><div class="hroute">${d.sub}</div></div>`;
+  if (d.tp === 'g') {
+    const flagStr = d.c.join('  ');
+    html += `<div class="statstrow"><div class="statbox"><div class="sv">${d.km} km</div><div class="sl2">afstand</div></div><div class="statbox"><div class="sv">${d.dur}</div><div class="sl2">rijden</div></div><div class="statbox"><div class="sv" style="font-size:13px">${flagStr}</div><div class="sl2">landen</div></div></div>`;
+  }
+  html += `<div class="dsection"><h3><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Dag-highlights</h3>`;
+  d.hl.forEach(h => { html += `<div class="hlitem"><div class="hldot"></div><div class="hltext">${h}</div></div>`; });
+  html += `</div>`;
+  if (d.shots && d.shots.length) {
+    html += `<div class="dsection"><h3><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> Shot-momenten vandaag</h3>`;
+    d.shots.forEach(s => { html += shotHtml(s); });
+    html += `</div>`;
+  }
+  document.getElementById('d-body').innerHTML = html;
+  document.getElementById('d-body').scrollTop = 0;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById('s-detail').classList.add('on');
+}
+
+function back() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById('s-home').classList.add('on');
+}
+
+function tab(t) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById('s-' + t).classList.add('on');
+  document.querySelectorAll('.navbtn').forEach(b => b.classList.remove('on'));
+  const nb = document.querySelector(`[onclick="tab('${t}')"]`);
+  if (nb) nb.classList.add('on');
+  if (t === 'shots') buildShots();
+  if (t === 'check') buildChecklist();
+}
+
+renderHomeCards();
+</script>
+</body>
+</html>
